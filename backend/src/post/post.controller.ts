@@ -1,18 +1,19 @@
-import { 
-    Controller, 
-    Get, 
-    Res, 
-    HttpStatus, 
-    Param, 
-    NotFoundException, 
-    Post, 
-    Body, 
-    Put, 
-    Delete 
+import {
+    Controller,
+    Get,
+    Res,
+    HttpStatus,
+    Param,
+    NotFoundException,
+    Post,
+    Body,
+    Put,
+    Delete,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { PostDTO } from './dto/post.dto';
 import { ValidateObjectId } from './pipes/validate-object-id.pipes';
+import { ValidationPostPipe } from './pipes/validate-post.pipes';
 
 
 @Controller('post')
@@ -27,9 +28,9 @@ export class PostController {
     }
 
     @Post()
-    async addPost(@Res() res, @Body() postDTO: PostDTO) {
+    async addPost(@Res() res, @Body(new ValidationPostPipe()) postDTO: PostDTO) {
         const newPost = await this.postService.addPost(postDTO);
-        return res.status(HttpStatus.OK).json(newPost);
+        return res.status(HttpStatus.CREATED).json(newPost);
     }
 
     @Get(':id')
@@ -43,9 +44,9 @@ export class PostController {
     async editPost(
         @Res() res,
         @Param('id', new ValidateObjectId()) id,
-        @Body() createPostDTO: PostDTO
+        @Body(new ValidationPostPipe()) PostDTO: PostDTO
     ) {
-        const editedPost = await this.postService.editPost(id, createPostDTO);
+        const editedPost = await this.postService.editPost(id, PostDTO);
         if (!editedPost) throw new NotFoundException('Post does not exist!');
         return res.status(HttpStatus.OK).json(editedPost);
     }
