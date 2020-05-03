@@ -14,16 +14,16 @@ export class PostService {
         return posts;
     }
 
+    async addPost(postDTO: PostDTO): Promise<IPost> {
+        const newPost = await this.postModel(postDTO);
+        return newPost.save();
+    }
+
     async getPost(postID): Promise<IPost> {
         const post = await this.postModel
             .findById(postID)
             .exec();
         return post;
-    }
-
-    async addPost(postDTO: PostDTO): Promise<IPost> {
-        const newPost = await this.postModel(postDTO);
-        return newPost.save();
     }
 
     async editPost(postID, postDTO: PostDTO): Promise<IPost> {

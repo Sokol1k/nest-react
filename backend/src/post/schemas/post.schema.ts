@@ -1,9 +1,9 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-export const PostSchema = new mongoose.Schema({
+export const PostSchema = new Schema({
+    author_id: Schema.Types.ObjectId,
     title: String,
     description: String,
-    body: String,
-    author: String,
-    date_posted: String
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now },
 })
